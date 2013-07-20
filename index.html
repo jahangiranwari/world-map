@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>  
+      <meta charset="utf-8">
+      <title>World Map</title>  
+      <link rel="stylesheet" href="vendor/css/jquery.qtip.min.css" media="screen">
+      <link rel="stylesheet" href="src/css/map.css" media="screen">
+    </head>
+    <body>
+      <h1>World Map <br /><span>using <a href="http://raphaeljs.com/">Raphaël.js</a> and <a href="http://qtip2.com/">qTip2</a></span></h1>
+      <div id="map-container"></div>
+      <div id="content">
+            <div>
+                <p>
+                  <label>Map size:</label>
+                  <span class="plus">+</span>
+                  <span class="minus">&ndash;</span>
+                </p>
+            </div>
+            
+            <form id="add-city">
+              Enter a city : <input type="text" name="city" placeholder="New York" />
+              <input type="submit" value="Add" />
+              <span class="alert hide">No results found. Try another spelling or adding country name to your search, for example, "Belgaum, India"</span>
+            </form>
+            
+            <ul id="cities"></ul>
+          
+            <p class="copyright">Search provided by <a href="http://www.openstreetmap.org/">© OpenStreetMap contributors</a></p>
+      </div>
+
+
+      <script src="vendor/js/raphael.js"></script>  
+      <script src="vendor/js/world.js"></script>  
+      <script src="vendor/js/jquery.min.js"></script>
+      <script src="vendor/js/jquery.qtip.min.js"></script>  
+      <script src="src/js/cities.js"></script>  
+      <script src="src/js/map.js"></script>  
+      <script src="src/js/map-city.js"></script>  
+      <script src="src/js/map-country.js"></script>  
+      
+      <script>
+        map.paper = Raphael("map-container", map.width, map.height);
+        map.init();      
+      </script>
+    </body>
+</html>
