@@ -98,6 +98,18 @@ map.registerDomEventHandlers = function () {
          var li = '<li><a href="#'+cityObj.id+'">'+cityObj.name+'</a></li>';
          $('#cities').append(li);
       });
+
+      //Resize keyboard shortcuts
+      $(document).keypress(function(event) {
+        if (event.which === 45 ) {
+           $('span.minus').trigger('click');
+        }
+
+        if ( event.which === 43 || event.which === 61 ) {
+           $('span.plus').trigger('click');
+        }
+      });
+
 };
 
 map.init = function() {
