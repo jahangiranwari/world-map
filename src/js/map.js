@@ -9,14 +9,14 @@ var map = {
     xOffset: 465.4,
     yOffset: 227.066,
     idCounter: 0,
-    
+
     getCoords: function(lat, lon) {
       return {
             cx: (lon * this.xFactor) + this.xOffset,
             cy: (lat * this.yFactor) + this.yOffset
         };
     },
-    
+
     resize: function(size) {
       var transform = 'S0'+size+','+size+',0,0';
       this.paper.forEach(function(obj){
@@ -26,18 +26,30 @@ var map = {
       this.paper.setSize(this.width * size, this.height * size);
       this.currSize = size;
     },
-    
+
     scaleObjectToCurrentSize: function(obj) {
        var transform = 'S0'+this.currSize+','+this.currSize+',0,0';
        obj.transform(transform);
     },
-    
+
+    addCity: function(data){
+      var cityName, cityElement;
+      if (data && data.length !== 0) {
+         cityName = data[0].display_name.substring(0, data[0].display_name.indexOf(","));
+         cityElement = map.city.drawAndTriggerAdd(data[0].lat, data[0].lon, cityName);
+         this.scaleObjectToCurrentSize(cityElement);
+      }
+      else {
+        $('body').trigger('noresult');
+      }
+    },
+
     //source Underscore.js
     getUniqueId: function(prefix) {
       var id = ++this.idCounter + '';
       return prefix ? prefix + id : id;
     }
-    
+
 };
 
 
@@ -50,7 +62,7 @@ map.registerDomEventHandlers = function () {
           map.resize(map.sizes[index + 1]);
         } 
       });
-      
+
       $('span.minus').on('click', function(event) {
         var index = $.inArray(map.currSize,  map.sizes);
         if (index > 0) {
@@ -65,17 +77,19 @@ map.registerDomEventHandlers = function () {
           var query = $(this).find('input[name="city"]').val();
           map.city.searchAndAdd(query);
       });
-      
+
       $('#cities').on('mouseover', 'a', function(event) {
           var id = $(event.currentTarget).attr("href");
+          id = '#' + id.substring(id.indexOf('#') + 1);
           $(id).trigger('mouseover');
       });
-      
+
       $('#cities').on('mouseout', 'a', function(event) {
-          var id = $(event.currentTarget).attr("href");
+          var id = $.trim($(event.currentTarget).attr("href"));
+          id = '#' + id.substring(id.indexOf('#') + 1);
           $(id).trigger('mouseout');
       });
-      
+
       $('body').on("noresult", function(){
         $('span.alert').fadeIn().delay(2800).fadeOut();
       });
@@ -95,4 +109,3 @@ map.init = function() {
     map.country.drawPaths(worldmap.shapes);
     map.city.drawCircles(cities);
 }
-          

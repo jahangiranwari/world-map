@@ -1,7 +1,7 @@
 //Class to handle methods related to cities
 map.city = {
 
-  searchUrl: 'http://nominatim.openstreetmap.org/search?format=json&limit=1&q=',
+  searchUrl: 'http://nominatim.openstreetmap.org/search?json_callback=map.addCity&format=json&limit=1&q=',
   hover: {
       over: function (e) {
         this.c = this.c || this.attr("fill");
@@ -20,7 +20,7 @@ map.city = {
           this.drawAndTriggerAdd(cityObj.lat, cityObj.lon, city);
       }
   },
-  
+
   drawAndTriggerAdd: function(lat, lon, city) {
       var cityElement = this.drawCircle(lat, lon, city);
       $('body').trigger('addCity', { name: city, id: cityElement.node.id } );
@@ -43,23 +43,14 @@ map.city = {
       return circle;
     },
 
+  //Note: adding a new city is triggered by jsonp callback
   searchAndAdd: function(query){
-     var self, cityName, cityElement;
-     self = this;
-     $.getJSON(this.searchUrl + query)
-     .done(function(data) {
-        if (data.length !== 0) {
-           cityName = data[0].display_name.substring(0, data[0].display_name.indexOf(","));
-           cityElement = self.drawAndTriggerAdd(data[0].lat, data[0].lon, cityName);
-           map.scaleObjectToCurrentSize(cityElement);
-        }
-        else {
-          $('body').trigger('noresult');
-        }
-      });          
-  },
-  
-  
+     $.ajax({
+        type : "GET",
+        dataType : "jsonp",
+        url : this.searchUrl + query
+    });
+  }
 };
 
 
